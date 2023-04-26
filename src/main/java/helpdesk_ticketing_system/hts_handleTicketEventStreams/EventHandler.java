@@ -12,7 +12,7 @@ public class EventHandler implements RequestHandler<Map<String,Object>,Object> {
      * then,
      *      - update status of issue with issue_id received from event to "TICKET_RAISED"
      *      - send a notification email to the user with user_id (i.e. submitted_by field value) received from event
-     * ---
+     * <p>
      * if event => "STATUS_CHANGED" & if the new status is not "ON-HOLD"
      * then,
      *      - update status of issue with issue_id received from event to "{new-status-value}"
