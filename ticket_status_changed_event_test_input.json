@@ -1,0 +1,6 @@
+{
+  "event": "TICKET_STATUS_CHANGED",
+  "ticket_id": "TIC2023422851058414816",
+  "issue_id" : "ISS202342432139853556",
+  "status": "ON_Hold"
+}
