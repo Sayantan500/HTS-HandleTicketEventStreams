@@ -1,6 +1,0 @@
-{
-  "event": "TICKET_RAISED",
-  "ticket_id": "TIC_1234_Test",
-  "issue_id" : "ISS_1234_Test",
-  "submitted_by": "1905707"
-}
