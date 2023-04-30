@@ -50,4 +50,21 @@ public class MongoDb {
         }
         return false;
     }
+
+    boolean updateTicketIdFieldOfIssue(Object issueId, String ticketId, Context context)
+    {
+        try{
+            UpdateResult updateResult = mongoIssuesCollection.updateOne(
+                    Filters.eq("_id", issueId),
+                    Updates.set("ticket_id",ticketId)
+            );
+            context.getLogger().log("update result : " + updateResult.wasAcknowledged());
+            return updateResult.wasAcknowledged();
+        }catch (Exception e){
+            context.getLogger().log("Exception occurred in : " + this.getClass().getName());
+            context.getLogger().log("Exception Class : " + e.getClass().getName());
+            context.getLogger().log("Exception Message : " + e.getMessage());
+        }
+        return false;
+    }
 }
