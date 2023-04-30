@@ -39,7 +39,8 @@ public class EventHandler implements RequestHandler<Map<String,Object>,Object> {
                 // status field of ISSUE has to be set to "TICKET_RAISED".
                 case TICKET_RAISED:
                     context.getLogger().log("Event : " + Events.TICKET_RAISED + "\n");
-                    if(mongoDb.updateStatusOfIssue(issueId,Status.TICKET_RAISED,context))
+                    if(mongoDb.updateStatusOfIssue(issueId,Status.TICKET_RAISED,context) &&
+                            mongoDb.updateTicketIdFieldOfIssue(issueId,String.valueOf(inputEvent.get("ticket_id")),context))
                         return HttpURLConnection.HTTP_OK;
                     break;
 
