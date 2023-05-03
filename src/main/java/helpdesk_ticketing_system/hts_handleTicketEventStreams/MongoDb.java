@@ -10,11 +10,13 @@ import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Updates;
+import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 import org.bson.Document;
 
 public class MongoDb {
     private final MongoCollection<Document> mongoIssuesCollection;
+    private final MongoCollection<Document> mongoNewIssuesCollection;
 
     public MongoDb() {
         String connectionUri = System.getenv("mongodb_connection_uri");
@@ -22,6 +24,7 @@ public class MongoDb {
         String password = System.getenv("mongodb_password");
         String database = System.getenv("mongodb_database");
         String issuesCollection = System.getenv("mongodb_collection_issues");
+        String newIssuesCollection = System.getenv("mongodb_collection_new_issues");
 
         String connectionString = String.format(connectionUri, username, password);
         MongoClient mongoClient = MongoClients.create(
@@ -32,6 +35,7 @@ public class MongoDb {
         );
 
         mongoIssuesCollection = mongoClient.getDatabase(database).getCollection(issuesCollection);
+        mongoNewIssuesCollection = mongoClient.getDatabase(database).getCollection(newIssuesCollection);
     }
     boolean updateStatusOfIssue(Object issueId, Status newStatus, Context context)
     {
@@ -60,6 +64,23 @@ public class MongoDb {
             );
             context.getLogger().log("update result : " + updateResult.wasAcknowledged());
             return updateResult.wasAcknowledged();
+        }catch (Exception e){
+            context.getLogger().log("Exception occurred in : " + this.getClass().getName());
+            context.getLogger().log("Exception Class : " + e.getClass().getName());
+            context.getLogger().log("Exception Message : " + e.getMessage());
+        }
+        return false;
+    }
+
+    boolean deleteIssueFromNewIssuesDB(Object issueIdToDelete, Context context)
+    {
+        try{
+            DeleteResult deleteResult = mongoNewIssuesCollection.deleteOne(Filters.eq("_id",issueIdToDelete));
+            context.getLogger().log(
+                    "delete result --> Ack : " + deleteResult.wasAcknowledged()
+                            + "\tcount : " + deleteResult.getDeletedCount()
+            );
+            return deleteResult.wasAcknowledged() && deleteResult.getDeletedCount()==1;
         }catch (Exception e){
             context.getLogger().log("Exception occurred in : " + this.getClass().getName());
             context.getLogger().log("Exception Class : " + e.getClass().getName());

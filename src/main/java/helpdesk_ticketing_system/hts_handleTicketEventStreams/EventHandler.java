@@ -40,7 +40,9 @@ public class EventHandler implements RequestHandler<Map<String,Object>,Object> {
                 case TICKET_RAISED:
                     context.getLogger().log("Event : " + Events.TICKET_RAISED + "\n");
                     if(mongoDb.updateStatusOfIssue(issueId,Status.TICKET_RAISED,context) &&
-                            mongoDb.updateTicketIdFieldOfIssue(issueId,String.valueOf(inputEvent.get("ticket_id")),context))
+                            mongoDb.updateTicketIdFieldOfIssue(issueId,String.valueOf(inputEvent.get("ticket_id")),context) &&
+                            mongoDb.deleteIssueFromNewIssuesDB(issueId,context)
+                    )
                         return HttpURLConnection.HTTP_OK;
                     break;
 
